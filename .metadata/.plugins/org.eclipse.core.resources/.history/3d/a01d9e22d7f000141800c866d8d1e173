@@ -1,0 +1,11 @@
+/**
+ * This is a class that manage the Chat window
+ */
+
+package com.cc.client.tools;
+
+public class ManageCCChat {
+
+	
+	
+}

@@ -1,0 +1,9 @@
+/**
+ * This is a Class that manage the FriendList, StrangerList, BlockList
+ */
+
+package com.cc.client.tools;
+
+public class ManageCCFriendList {
+
+}

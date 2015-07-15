@@ -1,0 +1,117 @@
+/**
+ * This is a GUI of chatting
+ * Because Client keep listening the perspective message from the Server that other Client sent, we present it as a Thread.
+ */
+
+package com.cc.client.view;
+
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.cc.client.model.CCClientConServer;
+import com.cc.common.Message;
+
+public class CCChat extends JFrame implements ActionListener, Runnable{
+
+	JTextField jtf;
+	JTextArea jta;
+	JButton jb;
+	JPanel jp;
+	String ownerId;
+	String friendId;
+	
+	
+	public CCChat(String ownerId, String friend) {
+		// TODO Auto-generated constructor stub
+		
+		this.ownerId = ownerId;
+		this.friendId = friend;
+		jb = new JButton("SEND");
+		jb.addActionListener(this);
+		jp = new JPanel();
+		jtf = new JTextField(25);
+		jtf.setSize(450, 300);
+		jta = new JTextArea();
+		
+		
+		jp.add(jtf);
+		jp.add(jb);
+		
+		this.add(jta,"Center");
+		this.add(jp,"South");
+		this.setTitle(ownerId+ " are chatting with "+ friend);
+		this.setIconImage((new ImageIcon("Image/cc.png").getImage())); //Won't show on Mac
+		this.setSize(450, 400);
+		this.setVisible(true);
+		
+		
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==jb){
+			//If user click the SEND button
+			Message m = new Message();
+			m.setSender(ownerId);
+			m.setGetter(friendId);
+			m.setCon(jtf.getText());
+			m.setSendtime(new java.util.Date().toString());
+			//Send to the Server
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(CCClientConServer.s.getOutputStream());
+				oos.writeObject(m);
+
+				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			
+		}
+	}
+
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true){
+			//Read message(keep waiting if have not receive the message)
+			try {
+				ObjectInputStream ois = new ObjectInputStream(CCClientConServer.s.getInputStream());
+				Message m = (Message)ois.readObject();
+				//Display the message
+				String Info = m.getSendtime()+m.getGetter()+" said to "+m.getSender()+"  :  \r\n"+m.getCon();
+				this.jta.append(Info);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
+
+}

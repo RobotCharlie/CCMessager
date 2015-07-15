@@ -1,0 +1,56 @@
+/**
+ * Function: This is a connection thread between server and exact user.
+ */
+
+package com.cc.server.model;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import com.cc.common.Message;
+
+public class SerConClientThread extends Thread {
+
+	Socket s;
+
+
+	public SerConClientThread(Socket s) {
+		// TODO Auto-generated constructor stub
+		
+		//Pass the Socket of Client to Server
+		this.s = s;
+		
+	}
+	
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+		while (true) {
+			// Receive the Info from Client
+
+			try {
+				ObjectInputStream ois = new ObjectInputStream(
+						s.getInputStream());
+				Message m = (Message) ois.readObject();
+				
+				System.out.println(m.getSender()+" talk to "+m.getGetter()+ "and say "+ m.getCon());
+				
+				SerConClientThread sc = ManageClientThread.getClientThread(m.getGetter());
+				ObjectOutputStream oos = new ObjectOutputStream(sc.s.getOutputStream());
+				oos.writeObject(sc);
+				
+				
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+}

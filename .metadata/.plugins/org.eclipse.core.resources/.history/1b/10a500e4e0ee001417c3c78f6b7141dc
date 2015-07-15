@@ -1,0 +1,18 @@
+/**
+ * This is a class that is used to manage the connection between Client and Server
+ */
+
+package com.cc.client.tools;
+
+import java.util.HashMap;
+
+public class ManagerClientConServerThread {
+
+	HashMap hm = new HashMap<String, ClientConServerThread>();
+	
+	//Put the Thread from class ClientConServerThread into hm, each time you Login to a new CC, a Thread will be setup.
+	public void addClientConServerThread(String qqId, ClientConServerThread ccst){
+		
+	}
+	
+}

@@ -1,0 +1,5 @@
+package com.cc.common;
+
+public interface MessageType {
+
+}

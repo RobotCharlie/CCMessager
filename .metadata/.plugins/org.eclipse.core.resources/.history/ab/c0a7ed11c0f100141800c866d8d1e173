@@ -1,0 +1,74 @@
+/**
+ * This is the Back-end of connection between Client with Servers
+ * There are two method in this class:
+ *                      1.sendLoginInfoToServer: send only Login info the the Server.
+ *                      2.sendInfoToServer: send regular info the the Sever.
+ */
+
+package com.cc.client.model;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.lang.management.ManagementFactory;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import com.cc.client.tools.ClientConServerThread;
+import com.cc.client.tools.ManagerClientConServerThread;
+import com.cc.common.Message;
+import com.cc.common.MessageType;
+import com.cc.common.User;
+
+public class CCClientConServer {
+
+	public Socket s;
+
+	// Send first request(Login info)
+	public boolean sendLoginInfoToServer(Object o) {
+
+		boolean b = false;
+
+		try {
+			s = new Socket("127.0.0.1", 9999);
+			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+			oos.writeObject(o);
+
+			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+			Message ms = (Message) ois.readObject();
+			
+			//This is where user Login
+			if (ms.getMessageType().equals(MessageType.message_succeed)) {
+				System.out.println("Login Success");
+				//Setup a Thread that connect the Client and Server
+				ClientConServerThread ccst = new ClientConServerThread(s);
+				//Setup this Thread
+				ccst.start();
+				ManagerClientConServerThread.addClientConServerThread(((User)o).getUserId(), ccst);
+				b = true;
+			} 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return b;
+	}
+
+//	public void sendInfoToServer(Object o) {
+//
+//		try {
+//			s = new Socket("127.0.0.1", 9999);
+//
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} finally {
+//
+//		}
+//	}
+
+}

@@ -1,0 +1,67 @@
+/**
+ * This is a GUI of chatting
+ */
+
+package com.cc.client.view;
+
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class CCChat extends JFrame implements ActionListener{
+
+	JTextField jtf;
+	JTextArea jta;
+	JButton jb;
+	JPanel jp;
+	
+	
+	public CCChat(String ownerId, String friend) {
+		// TODO Auto-generated constructor stub
+		
+		jb = new JButton("SEND");
+		jb.addActionListener(this);
+		jp = new JPanel();
+		jtf = new JTextField(25);
+		jtf.setSize(450, 300);
+		jta = new JTextArea();
+		
+		
+		jp.add(jtf);
+		jp.add(jb);
+		
+		this.add(jta,"Center");
+		this.add(jp,"South");
+		this.setTitle(ownerId+ " are chatting with "+ friend);
+		this.setIconImage((new ImageIcon("Image/cc.png").getImage())); //Won't show on Mac
+		this.setSize(450, 400);
+		this.setVisible(true);
+		
+		
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==jb){
+			//If user click the SEND button
+		}
+	}
+
+}

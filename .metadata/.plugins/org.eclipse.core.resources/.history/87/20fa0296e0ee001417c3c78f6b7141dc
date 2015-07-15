@@ -1,0 +1,9 @@
+/**
+ * This is a class that is used to manage the connection between Client and Server
+ */
+
+package com.cc.client.tools;
+
+public class ManagerClientConServerThread {
+
+}

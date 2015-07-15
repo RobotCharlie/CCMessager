@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 3 elements to &apos;CCServer/src/com.cc.common&apos;&#x0A;- Original project: &apos;CCClient&apos;&#x0A;- Destination element: &apos;CCServer/src/com.cc.common&apos;&#x0A;- Original elements:&#x0A;     com.cc.common.User.java&#x0A;     com.cc.common.MessageType.java&#x0A;     com.cc.common.Message.java" description="Copy compilation units" destination="=CCServer/src&lt;com.cc.common" element1="/src&lt;com.cc.common{User.java" element2="/src&lt;com.cc.common{MessageType.java" element3="/src&lt;com.cc.common{Message.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1430627588405" units="3" version="1.0"/>
+</session>

@@ -1,0 +1,13 @@
+/**
+ * This is a Class that manage the Chat window
+ */
+
+package com.cc.client.tools;
+
+import java.util.HashMap;
+
+public class ManageCCChat {
+
+	private static HashMap hm = new HashMap<String, CCChat>(arg0)
+	
+}

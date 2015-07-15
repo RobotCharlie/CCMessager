@@ -1,0 +1,81 @@
+/**
+ * This is a CC Server, waiting for the CC client to connect
+ */
+
+package com.cc.server.model;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import com.cc.common.Message;
+import com.cc.common.User;
+
+
+public class MyCCServer {
+
+	public MyCCServer() {
+		// TODO Auto-generated constructor stub
+
+		
+		
+		
+		try {
+			System.out.println("Listening at 9999...");
+			// Listening (9999 is the port number)
+			ServerSocket ss = new ServerSocket(9999);
+
+			
+			while(true){
+				//Blocked, waiting for the connection(with Client)
+				Socket s= ss.accept();
+				//Waiting for the info from Client
+				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+				User u = (User) ois.readObject();
+				System.out.println("UserId: "+ u.getUserId()+"Password: "+ u.getPwd());
+				Message m = new Message();
+				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+				
+				
+				if(u.getPwd().equals("123456")){
+					m.setMessageType("1");
+					oos.writeObject(m);
+					
+					//Setup a Thread, let Client connect with sever
+					SerConClientThread scct = new SerConClientThread(s);
+					ManageClientThread.addClientThread(u.getUserId(), scct);
+					//Start the thread connected with exact client
+					scct.start();
+					
+				}else {
+					m.setMessageType("2");
+					oos.writeObject(m);
+					s.close();
+				}	
+				
+			}
+			
+			
+			
+			/*BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			String info = br.readLine();*/
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+
+	}
+
+}

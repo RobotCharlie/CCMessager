@@ -1,0 +1,9 @@
+/**
+ * This is a Interface to define the type of the package
+ */
+
+package com.cc.common;
+
+public interface MessageType {
+
+}

@@ -1,0 +1,26 @@
+package com.cc.server.model;
+
+import java.util.HashMap;
+
+public class ManageClientThread {
+
+	//Setup a HashMap to collect <userId, that Thread>
+	public HashMap hm = new HashMap<String , SerConClientThread>();
+	
+	//Add a Client communication thread to HashMap
+	public void addClientThread(String uid, SerConClientThread ct){
+		hm.put(uid, ct);
+	}
+	
+	public SerConClientThread () {
+		
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,231 @@
+/**
+ * My Friend List(Including BlackList, Strangers)
+ */
+package com.cc.client.view;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import com.cc.client.tools.ManageCCChat;
+import com.cc.common.Message;
+
+
+public class CCFriendList extends JFrame implements ActionListener,MouseListener{
+
+	String ownerId;
+	//Set this JFrame as a CardLayout
+	CardLayout cardlayout;
+	
+	// The first card
+	JPanel panel_whole, panel_show, panel_left;
+	JButton panel_f_b1, panel_bl_b1, panel_s_b1;
+	JScrollPane jspl;
+
+	// The second card
+	JPanel panel2_whole, panel2_show, panel2_left;
+	JButton panel2_f_b1, panel2_bl_b1, panel2_s_b1;
+	JScrollPane jspl2;
+
+	// The third card
+	JPanel panel3_whole, panel3_show, panel3_left;
+	JButton panel3_f_b1, panel3_bl_b1, panel3_s_b1;
+	JScrollPane jspl3;
+	
+	JLabel[] friends;
+
+	public CCFriendList(String ownerId) {
+		// TODO Auto-generated constructor stub
+
+		this.ownerId = ownerId;
+		// The first card(show panel_friend)
+		panel_whole = new JPanel(new BorderLayout());
+		panel_show = new JPanel(new GridLayout(50/* Assuming have 50 friends */,
+				1, 4, 4));
+		panel_left = new JPanel(new GridLayout(2, 1));
+
+		panel_f_b1 = new JButton("My Friends");
+		panel_bl_b1 = new JButton("Black List");
+		panel_s_b1 = new JButton("Stranger");
+		
+
+		// Put two JButton into panel_left
+		panel_left.add(panel_s_b1);
+		panel_left.add(panel_bl_b1);
+
+		// Initialization of 50 friends
+		friends = new JLabel[50];
+
+		
+		for (int i = 0; i < friends.length; i++) {
+			friends[i] = new JLabel(i + 1 + "",
+					new ImageIcon("Image/user.png"), JLabel.LEFT);
+			//The default is that the Users only know if themselves are online or not
+			friends[i].setEnabled(false);
+			if(friends[i].getText().equals(ownerId)){
+				friends[i].setEnabled(true);
+			}
+			friends[i].addMouseListener(this);
+			panel_show.add(friends[i]);
+		}
+
+		jspl = new JScrollPane(panel_show);
+
+		panel_whole.add(panel_f_b1, "North");
+		panel_whole.add(jspl, "Center");
+		panel_whole.add(panel_left, "South");
+
+		this.add(panel_whole, "Center");
+		this.setSize(250, 600);
+		this.setVisible(true);
+
+		// The second card(show stranger)
+		panel2_whole = new JPanel(new BorderLayout());
+		panel2_show = new JPanel(new GridLayout(20/* Assuming have 20 strangers */,
+				1, 4, 4));
+		panel2_left = new JPanel(new GridLayout(2, 1));
+
+		panel2_f_b1 = new JButton("My Friends");
+		panel2_bl_b1 = new JButton("Black List");
+		panel2_s_b1 = new JButton("Stranger");
+
+		// Put two JButton into panel_left
+		panel2_left.add(panel2_f_b1);
+		panel2_left.add(panel2_s_b1);
+		
+		// Initialization of 50 friends
+		JLabel[] stranger = new JLabel[20];
+
+		for (int i = 0; i < stranger.length; i++) {
+			stranger[i] = new JLabel(i + 1 + "",
+					new ImageIcon("Image/user.png"), JLabel.LEFT);
+			panel2_show.add(stranger[i]);
+			stranger[i].addMouseListener(this);
+		}
+
+		jspl2 = new JScrollPane(panel2_show);
+
+		panel2_whole.add(panel2_left, "North");
+		panel2_whole.add(jspl2, "Center");
+		panel2_whole.add(panel2_bl_b1, "South");
+
+		this.add(panel2_whole, "Center");
+		this.setSize(250, 600);
+		this.setVisible(true);
+		
+		//Set the JFrame as a CardLayout
+		cardlayout = new CardLayout();
+		this.setLayout(cardlayout);
+		this.add(panel_whole,"1");
+		this.add(panel2_whole,"2");
+		//Display userId at window
+		this.setTitle(ownerId);
+		
+		
+		//Action listening 
+		panel_s_b1.addActionListener(this);
+		panel2_f_b1.addActionListener(this);
+		
+		
+
+	}
+
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+	
+	//CCFriendListUpdate
+	public void updateFriendList(Message m){
+		
+		String onLineFriend[] = m.getCon().split(" ");
+		
+		for(int i=0;i<onLineFriend.length;i++){
+			
+			friends[Integer.parseInt(onLineFriend[i])-1].setEnabled(true);
+		}
+		
+		
+		
+	}
+	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+		if(e.getSource() == panel_s_b1){
+			cardlayout.show(this.getContentPane(), "2");
+		}else if(e.getSource() == panel2_f_b1){
+			cardlayout.show(this.getContentPane(), "1");
+		}
+		
+		
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+		if(e.getClickCount() == 2){
+			String friendNo = ((JLabel)e.getSource()).getText();
+			System.out.println("you want to chat with "+ friendNo);
+			
+			//Once enter the CCChat window, you open the Thread to receive the message
+			CCChat ccchat = new CCChat(ownerId, friendNo);
+			
+			//Put the chat window into the Class ManageCCChat
+			ManageCCChat.addCCChat(ownerId+""+friendNo, ccchat);
+			
+			
+		}
+		
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		JLabel label = (JLabel)e.getSource();
+		label.setForeground(Color.GREEN);
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		JLabel label = (JLabel)e.getSource();
+		label.setForeground(Color.BLACK);
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

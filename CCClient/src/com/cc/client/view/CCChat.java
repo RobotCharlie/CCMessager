@@ -1,0 +1,105 @@
+/**
+ * This is a GUI of chatting
+ * Because Client keep listening the perspective message from the Server that other Client sent, we present it as a Thread.
+ */
+
+package com.cc.client.view;
+
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.cc.client.model.CCClientConServer;
+import com.cc.client.tools.ManagerClientConServerThread;
+import com.cc.common.Message;
+import com.cc.common.MessageType;
+
+public class CCChat extends JFrame implements ActionListener{
+
+	JTextField jtf;
+	JTextArea jta;
+	JButton jb;
+	JPanel jp;
+	String ownerId;
+	String friendId;
+	
+	
+	public CCChat(String ownerId, String friend) {
+		// TODO Auto-generated constructor stub
+		
+		this.ownerId = ownerId;
+		this.friendId = friend;
+		jb = new JButton("SEND");
+		jb.addActionListener(this);
+		jp = new JPanel();
+		jtf = new JTextField(25);
+		jtf.setSize(450, 300);
+		jta = new JTextArea();
+		
+		
+		jp.add(jtf);
+		jp.add(jb);
+		
+		this.add(jta,"Center");
+		this.add(jp,"South");
+		this.setTitle(ownerId+ " are chatting with "+ friend);
+		this.setIconImage((new ImageIcon("Image/cc.png").getImage())); //Won't show on Mac
+		this.setSize(450, 400);
+		this.setVisible(true);
+		
+		
+		
+	}
+	
+	//Method that can show the Message
+    public void showMessage(Message m){
+    	String Info = "( "+m.getSendtime()+" )   "+m.getSender()+" said to "+m.getGetter()+"  :  \r\n"+m.getCon()+"\r\n";
+		this.jta.append(Info);
+    }
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==jb){
+			//If user click the SEND button
+			Message m = new Message();
+			m.setMessageType(MessageType.message_comm_mes);
+			m.setSender(ownerId);
+			m.setGetter(friendId);
+			m.setCon(jtf.getText());
+			m.setSendtime(new java.util.Date().toString());
+			
+			//Send to the Server
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(ManagerClientConServerThread.getClientConServerThread(ownerId).
+						getSocket().getOutputStream());
+				oos.writeObject(m);
+				jtf.setText("");
+				
+				
+				String Info = "( "+m.getSendtime()+" )   "+m.getGetter()+" said to "+m.getSender()+"  :  \r\n"+m.getCon()+"\r\n";
+				this.jta.append(Info);
+				
+
+				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}			
+			
+		}
+	}
+
+
+}

@@ -1,0 +1,9 @@
+//-------------------------NOTE--------------------------------//
+/**
+* 1. When you finding a hard time to find a piece of code. Firstly, you need to think about the role or function about it, and
+*    then think about who(Server, Client, or even specific) should have this function.
+*
+* 2. If you have just only one object that you want to have it more, you just need to design a class for this kind of object.
+*
+*
+*/
